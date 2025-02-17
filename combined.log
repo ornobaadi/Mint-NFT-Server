@@ -41,3 +41,40 @@
 {"level":"info","message":"GET /","timestamp":"2025-02-17T14:31:41.170Z"}
 {"level":"info","message":"GET /","timestamp":"2025-02-17T14:31:41.389Z"}
 {"level":"info","message":"GET /","timestamp":"2025-02-17T14:31:41.574Z"}
+{"level":"info","message":"MongoDB connection closed.","timestamp":"2025-02-17T14:35:54.449Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T21:34:44.924Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T21:34:44.935Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T21:36:47.569Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T21:36:47.573Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T21:36:51.135Z"}
+{"level":"info","message":"GET /favicon.ico","timestamp":"2025-02-17T21:36:51.248Z"}
+{"level":"info","message":"GET /api/nft/store","timestamp":"2025-02-17T21:37:08.513Z"}
+{"level":"info","message":"GET /api/nft/:nftId","timestamp":"2025-02-17T21:37:19.186Z"}
+{"level":"info","message":"GET /api/nft/gallery/:userWalletAddress","timestamp":"2025-02-17T21:37:29.478Z"}
+{"level":"info","message":"GET /api/nft/","timestamp":"2025-02-17T21:53:39.181Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T22:06:34.004Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T22:06:34.010Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T22:06:40.299Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T22:06:40.304Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T22:06:51.495Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T22:06:51.500Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T22:07:17.012Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T22:07:17.019Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T22:08:42.751Z"}
+{"level":"info","message":"GET /api/nft/store%20/","timestamp":"2025-02-17T22:08:53.797Z"}
+{"level":"info","message":"POST /api/nft/store","timestamp":"2025-02-17T22:09:18.770Z"}
+{"level":"info","message":"NFT data stored successfully for ID: 771287","timestamp":"2025-02-17T22:09:18.959Z"}
+{"level":"info","message":"POST /api/nft/store","timestamp":"2025-02-17T22:09:20.554Z"}
+{"level":"info","message":"NFT data stored successfully for ID: 802112","timestamp":"2025-02-17T22:09:20.717Z"}
+{"level":"info","message":"POST /api/nft/store","timestamp":"2025-02-17T22:09:21.647Z"}
+{"level":"info","message":"NFT data stored successfully for ID: 404327","timestamp":"2025-02-17T22:09:21.811Z"}
+{"level":"info","message":"POST /api/nft/store","timestamp":"2025-02-17T22:09:31.229Z"}
+{"level":"info","message":"NFT data stored successfully for ID: 382803","timestamp":"2025-02-17T22:09:31.390Z"}
+{"level":"info","message":"POST /api/nft/store","timestamp":"2025-02-17T22:12:28.483Z"}
+{"level":"info","message":"NFT data stored successfully for ID: 647350","timestamp":"2025-02-17T22:12:28.656Z"}
+{"level":"info","message":"POST /api/nft/store","timestamp":"2025-02-17T22:12:35.231Z"}
+{"level":"info","message":"NFT data stored successfully for ID: 804147","timestamp":"2025-02-17T22:12:35.393Z"}
+{"level":"info","message":"POST /api/nft/store","timestamp":"2025-02-17T22:16:56.369Z"}
+{"level":"info","message":"NFT data stored successfully for ID: 318174","timestamp":"2025-02-17T22:16:56.542Z"}
+{"level":"info","message":"POST /api/nft/store","timestamp":"2025-02-17T22:17:05.534Z"}
+{"level":"info","message":"NFT data stored successfully for ID: 550386","timestamp":"2025-02-17T22:17:05.695Z"}

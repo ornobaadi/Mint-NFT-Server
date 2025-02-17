@@ -80,12 +80,16 @@ async function connectToMongo(retries = 5) {
     return false;
 }
 
-// Middleware
-app.use(cors({
-    origin: ['http://localhost:3000'], // Add your frontend URL
+const corsOptions = {
+    origin: ['http://localhost:5173', 'http://127.0.0.1:5173', 'https://mint-nft-cytric.web.app/'], // Add your frontend URLs
     methods: ['GET', 'POST', 'OPTIONS'],
-    credentials: true
-}));
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+
+// Middleware
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(helmet());
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -204,6 +208,121 @@ app.post('/api/nft/store', async (req, res) => {
         res.status(500).json({
             status: 'error',
             message: 'Internal server error while storing NFT'
+        });
+    }
+});
+
+/**
+ * @swagger
+ * /api/nft/{nftId}:
+ *   get:
+ *     summary: Get NFT by ID
+ *     description: Retrieves NFT data using the NFT ID
+ *     parameters:
+ *       - in: path
+ *         name: nftId
+ *         required: true
+ *         schema:
+ *           type: number
+ *         description: Numeric ID of the NFT
+ *     responses:
+ *       200:
+ *         description: NFT data retrieved successfully
+ *       404:
+ *         description: NFT not found
+ *       500:
+ *         description: Server error
+ */
+app.get('/api/nft/:nftId', async (req, res) => {
+    try {
+        const nftId = Number(req.params.nftId);
+
+        if (isNaN(nftId)) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Invalid NFT ID format'
+            });
+        }
+
+        const nft = await db.collection('nfts').findOne({ nftId });
+
+        if (!nft) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'NFT not found'
+            });
+        }
+
+        logger.info(`NFT data retrieved for ID: ${nftId}`);
+
+        res.json({
+            status: 'success',
+            data: nft
+        });
+    } catch (error) {
+        logger.error('Error retrieving NFT:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error while retrieving NFT'
+        });
+    }
+});
+
+/**
+ * @swagger
+ * /api/nft/gallery/{userWalletAddress}:
+ *   get:
+ *     summary: Get NFT Gallery
+ *     description: Retrieves all NFTs owned by a specific wallet address
+ *     parameters:
+ *       - in: path
+ *         name: userWalletAddress
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User's wallet address
+ *     responses:
+ *       200:
+ *         description: NFT gallery retrieved successfully
+ *       404:
+ *         description: No NFTs found for this wallet
+ *       500:
+ *         description: Server error
+ */
+app.get('/api/nft/gallery/:userWalletAddress', async (req, res) => {
+    try {
+        const { userWalletAddress } = req.params;
+
+        if (!userWalletAddress) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Wallet address is required'
+            });
+        }
+
+        const nfts = await db.collection('nfts')
+            .find({ userWalletAddress })
+            .sort({ createdAt: -1 })
+            .toArray();
+
+        if (!nfts.length) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'No NFTs found for this wallet address'
+            });
+        }
+
+        logger.info(`NFT gallery retrieved for wallet: ${userWalletAddress}`);
+
+        res.json({
+            status: 'success',
+            data: nfts
+        });
+    } catch (error) {
+        logger.error('Error retrieving NFT gallery:', error);
+        res.status(500).json({
+            status: 'error',
+            message: 'Internal server error while retrieving NFT gallery'
         });
     }
 });
