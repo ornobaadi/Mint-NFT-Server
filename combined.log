@@ -23,3 +23,21 @@
 {"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T13:45:56.792Z"}
 {"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T13:45:56.807Z"}
 {"level":"info","message":"MongoDB connection closed.","timestamp":"2025-02-17T13:50:23.180Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T14:27:55.817Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T14:27:55.822Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T14:27:57.065Z"}
+{"level":"info","message":"GET /favicon.ico","timestamp":"2025-02-17T14:27:57.207Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T14:29:11.222Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T14:29:11.228Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T14:31:22.097Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T14:31:22.101Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T14:31:31.434Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T14:31:31.439Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T14:31:39.522Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T14:31:39.527Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T14:31:40.172Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T14:31:40.657Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T14:31:40.936Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T14:31:41.170Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T14:31:41.389Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T14:31:41.574Z"}
