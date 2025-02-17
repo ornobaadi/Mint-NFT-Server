@@ -1,0 +1,25 @@
+{"level":"info","message":"Connected to MongoDB Atlas!","timestamp":"2025-02-17T13:16:02.716Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T13:16:02.721Z"}
+{"level":"info","message":"Connected to MongoDB Atlas!","timestamp":"2025-02-17T13:16:33.598Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T13:16:33.603Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T13:22:24.438Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T13:22:24.443Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T13:22:27.901Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T13:22:28.944Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T13:24:14.363Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T13:29:25.867Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T13:29:25.872Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T13:29:40.427Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T13:29:40.432Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T13:30:01.516Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T13:30:02.192Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T13:30:02.691Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T13:30:03.320Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T13:30:03.753Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T13:30:35.015Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T13:30:35.020Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T13:35:47.955Z"}
+{"level":"info","message":"GET /","timestamp":"2025-02-17T13:35:49.000Z"}
+{"level":"info","message":"Connected successfully to MongoDB Atlas!","timestamp":"2025-02-17T13:45:56.792Z"}
+{"level":"info","message":"Server is running on port: 5000","timestamp":"2025-02-17T13:45:56.807Z"}
+{"level":"info","message":"MongoDB connection closed.","timestamp":"2025-02-17T13:50:23.180Z"}

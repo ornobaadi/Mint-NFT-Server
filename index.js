@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const helmet = require('helmet');
 const winston = require('winston');
 const swaggerJsDoc = require('swagger-jsdoc');
@@ -25,7 +25,7 @@ const logger = winston.createLogger({
 
 // Swagger configuration
 const swaggerOptions = {
-    swaggerDefinition: {
+    definition: {
         openapi: '3.0.0',
         info: {
             title: 'NFT API',
@@ -42,11 +42,11 @@ const swaggerOptions = {
     apis: ['./index.js'], // path to your API routes file
 };
 
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
+const swaggerSpec = swaggerJsDoc(swaggerOptions);
 
-// MongoDB Atlas Connection URL
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xd8rz.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
-const dbName = 'nft-database';
+// MongoDB Atlas Connection URL - ensure you have these in your .env file
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.xd8rz.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+const dbName = process.env.DB_NAME || 'nft-database';
 
 // Create a MongoClient with options
 const client = new MongoClient(uri, {
@@ -59,31 +59,70 @@ const client = new MongoClient(uri, {
 
 let db;
 
-// Connect to MongoDB Atlas
-async function connectToMongo() {
-    try {
-        await client.connect();
-        logger.info("Connected to MongoDB Atlas!");
-        db = client.db(dbName);
-    } catch (error) {
-        logger.error('MongoDB connection error:', error);
-        process.exit(1); // Exit if we can't connect to the database
+// Connect to MongoDB Atlas with retry logic
+async function connectToMongo(retries = 5) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            await client.connect();
+            await client.db("admin").command({ ping: 1 });
+            logger.info("Connected successfully to MongoDB Atlas!");
+            db = client.db(dbName);
+            return true;
+        } catch (error) {
+            logger.error(`MongoDB connection attempt ${i + 1} failed:`, error);
+            if (i === retries - 1) {
+                throw error;
+            }
+            // Wait for 5 seconds before retrying
+            await new Promise(resolve => setTimeout(resolve, 5000));
+        }
     }
+    return false;
 }
 
 // Middleware
 app.use(cors({
-    origin: 'http://localhost:3000', // Adjust this to your frontend URL
-    methods: 'GET,POST',
+    origin: ['http://localhost:3000'], // Add your frontend URL
+    methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true
 }));
 app.use(express.json());
-app.use(helmet()); // Adds secure headers
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use(helmet());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // Request logging middleware
 app.use((req, res, next) => {
     logger.info(`${req.method} ${req.url}`);
+    next();
+});
+
+// Health check endpoint
+/**
+ * @swagger
+ * /:
+ *   get:
+ *     summary: Health check endpoint
+ *     description: Returns the status of the API and database connection
+ *     responses:
+ *       200:
+ *         description: API is running successfully
+ */
+app.get('/', (req, res) => {
+    res.json({
+        status: 'success',
+        message: 'NFT API is running',
+        database: db ? 'connected' : 'disconnected'
+    });
+});
+
+// Database connection check middleware
+app.use((req, res, next) => {
+    if (!db) {
+        return res.status(500).json({
+            status: 'error',
+            message: 'Database connection not established'
+        });
+    }
     next();
 });
 
@@ -92,7 +131,7 @@ app.use((req, res, next) => {
  * /api/nft/store:
  *   post:
  *     summary: Store NFT data
- *     description: Stores the provided NFT data under the provided NFT ID
+ *     description: Stores the provided NFT data in the database
  *     requestBody:
  *       required: true
  *       content:
@@ -120,17 +159,27 @@ app.use((req, res, next) => {
  *       201:
  *         description: NFT data stored successfully
  *       400:
- *         description: Error storing NFT data
+ *         description: Invalid input data
+ *       500:
+ *         description: Server error
  */
 app.post('/api/nft/store', async (req, res) => {
     try {
         const { nftId, name, description, logoUrl, userWalletAddress } = req.body;
 
-        // Validate required fields
         if (!nftId || !name || !description || !logoUrl || !userWalletAddress) {
             return res.status(400).json({
                 status: 'error',
                 message: 'All fields are required: nftId, name, description, logoUrl, userWalletAddress'
+            });
+        }
+
+        // Check if NFT with this ID already exists
+        const existingNFT = await db.collection('nfts').findOne({ nftId: Number(nftId) });
+        if (existingNFT) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'NFT with this ID already exists'
             });
         }
 
@@ -147,123 +196,40 @@ app.post('/api/nft/store', async (req, res) => {
 
         res.status(201).json({
             status: 'success',
-            message: 'NFT data stored successfully'
+            message: 'NFT data stored successfully',
+            data: { _id: result.insertedId }
         });
     } catch (error) {
         logger.error('Error storing NFT:', error);
-        res.status(400).json({
+        res.status(500).json({
             status: 'error',
-            message: error.message
+            message: 'Internal server error while storing NFT'
         });
     }
 });
 
-/**
- * @swagger
- * /api/nft/{nftId}:
- *   get:
- *     summary: Get NFT by ID
- *     description: Retrieves NFT data stored under the provided NFT ID
- *     parameters:
- *       - in: path
- *         name: nftId
- *         required: true
- *         schema:
- *           type: number
- *         description: The NFT ID
- *     responses:
- *       200:
- *         description: NFT data retrieved successfully
- *       404:
- *         description: NFT not found
- *       400:
- *         description: Error retrieving NFT data
- */
-app.get('/api/nft/:nftId', async (req, res) => {
+// Start server with database connection retry
+const startServer = async () => {
     try {
-        const nft = await db.collection('nfts').findOne({
-            nftId: Number(req.params.nftId)
-        });
-
-        if (!nft) {
-            logger.warn(`NFT not found for ID: ${req.params.nftId}`);
-            return res.status(404).json({
-                status: 'error',
-                message: 'NFT not found'
-            });
-        }
-
-        logger.info(`NFT retrieved successfully for ID: ${req.params.nftId}`);
-
-        res.status(200).json({
-            status: 'success',
-            data: nft
+        await connectToMongo();
+        app.listen(port, () => {
+            logger.info(`Server is running on port: ${port}`);
         });
     } catch (error) {
-        logger.error('Error retrieving NFT:', error);
-        res.status(400).json({
-            status: 'error',
-            message: error.message
-        });
+        logger.error('Failed to start server:', error);
+        process.exit(1);
     }
-});
+};
 
-/**
- * @swagger
- * /api/nft/gallery/{userWalletAddress}:
- *   get:
- *     summary: Get NFT Gallery
- *     description: Retrieves a list of NFT data objects created by the provided user wallet address
- *     parameters:
- *       - in: path
- *         name: userWalletAddress
- *         required: true
- *         schema:
- *           type: string
- *         description: The user's wallet address
- *     responses:
- *       200:
- *         description: NFT gallery retrieved successfully
- *       400:
- *         description: Error retrieving NFT gallery
- */
-app.get('/api/nft/gallery/:userWalletAddress', async (req, res) => {
-    try {
-        const nfts = await db.collection('nfts')
-            .find({ userWalletAddress: req.params.userWalletAddress })
-            .toArray();
+startServer();
 
-        logger.info(`Gallery retrieved successfully for wallet: ${req.params.userWalletAddress}`);
-
-        res.status(200).json({
-            status: 'success',
-            data: nfts
-        });
-    } catch (error) {
-        logger.error('Error retrieving gallery:', error);
-        res.status(400).json({
-            status: 'error',
-            message: error.message
-        });
-    }
-});
-
-// Error handling middleware - catches any errors not handled in routes
+// Error handling middleware
 app.use((err, req, res, next) => {
     logger.error('Unhandled error:', err);
     res.status(500).json({
         status: 'error',
         message: 'An unexpected error occurred'
     });
-});
-
-// Connect to MongoDB then start the server
-connectToMongo().then(() => {
-    app.listen(port, () => {
-        logger.info(`Server is running on port: ${port}`);
-    });
-}).catch(error => {
-    logger.error('Failed to start server:', error);
 });
 
 // Handle closing the connection when the app is terminated
